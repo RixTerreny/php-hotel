@@ -1,5 +1,4 @@
 <?php
-
     $hotels = [
 
         [
@@ -37,9 +36,35 @@
             'vote' => 2,
             'distance_to_center' => 50
         ],
-
     ];
+
+$hotelsFiltrati = [];
+
+$filtri = isset($_GET["parcheggio"]) || isset($_GET["stelle"]);
+    if ($filtri){
+
+    foreach ($hotels as $hotel) {
+        $hotelPush = true;
+
+        if (isset($_GET["parcheggio"]) && $hotel["parking"] != $_GET["parcheggio"]) {
+            $hotelPush = false;
+        }
+
+        if (isset($_GET["stelle"]) && $hotel["vote"] != $_GET["stelle"]) {
+            $hotelPush = false;
+        }
+
+        if ($hotelPush) {
+            $hotelsFiltrati[] = $hotel;
+        }
+    }}
+    else{
+        $hotelsFiltrati = $hotels;
+    }
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,32 +80,7 @@
     <div class="container my-4 text-center">
         <h1 class="mb-4">Php Hotel</h1>
 
-        <form action="newPage.php" method="GET">
-            <div>Parcheggio: </div>
-
-            <div class="d-flex justify-content-center"> 
-                <div class="mx-2">
-                    <div>si</div>
-                    <input type="radio" name="parcheggio" value="1">
-                </div>
-    
-                <div class="mx-2">
-                    <div>no</div>
-                    <input type="radio" name="parcheggio" value="0">
-                </div>
-            </div>
-
-            <select class="mx-2" name="stelle">
-                <option value="0" disabled selected>Recenzioni</option>
-                <option value="1">1 &#9733;</option>
-                <option value="2">2 &#9733;</option>
-                <option value="3">3 &#9733;</option>
-                <option value="4">4 &#9733;</option>
-                <option value="5">5 &#9733;</option>
-            </select>
-            <input type="submit" >
-        </form>
-
+        <h3>Risultati ricerca</h3>
         <?php 
             echo "<table class='text-center m-auto'>";
             echo "<tr class='px-2 fs-4'>";
@@ -90,7 +90,7 @@
             echo "<th class='px-2'>Voto</th>";
             echo "<th class='px-2'>Distanza dal centro</th>";
             echo "</tr>";
-        foreach ($hotels as &$hotel) {
+        foreach ($hotelsFiltrati as &$hotel) {
             echo "<tr class='px-2'>";
             echo "<td class='px-2'>{$hotel['name']}</td>";
             echo "<td class='px-2'>{$hotel['description']}</td>";
